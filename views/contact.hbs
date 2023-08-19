@@ -1,0 +1,61 @@
+
+<article class="masthead" style="margin-top: 50px; padding-top:50px;">
+     <div class="container px-5 ">
+          <div class="row gx-5 align-items-center">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                                          {{msg}}
+                        </div>
+                         <div class="masthead-device-mockup">
+                       <img src="/IMAGES/contact-page-pic.jpeg" class="img-fluid" alt="">
+                        </div>
+                    </div>
+          
+    
+
+                    <div class="col-lg-6">
+                        <!-- Masthead device mockup feature-->
+                        <div class="masthead-device-mockup">
+                            <!-- Wrapper container -->
+                            <div class="container py-4">
+                                     <h4 class="display-7 lh-1 mt-0">Let's get in touch</h4>
+                                 <!-- Bootstrap 5 starter form -->
+                                 <form id="contact-form" method="POST" action="/contact" enctype="multipart/form-data">
+
+                                     <!-- Name input -->
+                                     <div class="mb-3">
+                                          <label class="form-label" for="name">Name</label>
+                                          <input class="form-control" id="name" type="text" placeholder="Name" name="name" required />
+                                     </div>
+
+                                     <!-- Email address input -->
+                                     <div class="mb-3">
+                                          <label class="form-label" for="email">Email Address</label>
+                                          <input class="form-control" type="email" placeholder="Email Address" id="email" name="email" aria-describedby="emailHelp" required/>
+                                     </div>
+
+                                     <!-- Subject input -->
+                                     <div class="mb-3">
+                                         <label class="form-label" for="subject">Subject</label>
+                                         <input class="form-control" type="text" placeholder="Subject" id="subject" name="subject" required/>
+                                    </div>
+
+                                     <!-- Message input -->
+                                     <div class="mb-3">
+                                         <label class="form-label" for="message">Message</label>
+                                         <textarea class="form-control" id="message" type="text" placeholder="Message" name="message" style="height: 10rem;" required></textarea>
+                                     </div>
+
+                                    <!-- Form submit button -->
+                                     <div class="d-grid">
+                                         <button class="btn btn-primary btn-lg" type="submit">Submit</button>
+                                     </div>
+                                     
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+    </div>
+    <script src="./Public/JS/contactform.js"></script>
+</article>
