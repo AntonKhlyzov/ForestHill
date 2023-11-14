@@ -13,7 +13,8 @@ app.use(cors({ origin: "*" }));
 
 require("dotenv").config();
 
-
+const axios = require('axios');
+const ICAL = require('ical.js');
 
 
 //const fs = require("fs");
@@ -39,8 +40,42 @@ app.use('/',require('./routes/index'));
 
 app.use('/contact',require('./routes/contact'));
 
-app.use('/coralvilla',require('./routes/houseone'));
+app.use('/moderncoralvilla',require('./routes/houseone'));
 
+app.use('/luxurycoralvilla',require('./routes/housetwo'));
+
+app.use('/terms',require('./routes/terms'));
+
+app.use('/privacy',require('./routes/privacy'));
+
+// New route for handling booking requests
+const bookingRequestRoute = require('./routes/bookingRequest'); // Create this file
+app.use('/send-booking-request', bookingRequestRoute);
+
+// app.use('/calendar',require('./routes/calendar'));
+
+// app.use('/fullcalendar', express.static(path.join(__dirname, 'node_modules/fullcalendar/dist')));
+
+const { fetchICalData, parseICalData } = require('./routes/calparserairbnb');
+const { fetchICalData1, parseICalData1 } = require('./routes/calparservrbo');
+
+app.get('/airbnb-calendar-parsed', async (req, res) => {
+    try {
+        // Fetch iCal data from Airbnb and VRBO APIs or files and parse them
+        const icalData = await fetchICalData(); // Implement a function to fetch Airbnb iCal data
+        const disabledDates = parseICalData(icalData);
+        
+        const icalData1 = await fetchICalData1(); // Implement a function to fetch VRBO iCal data
+        const disabledDates1 = parseICalData1(icalData1);
+
+        // Combine disabledDates and disabledDates1 into totaldisabledDates
+        const totaldisabledDates = [...disabledDates, ...disabledDates1];
+
+        res.json(totaldisabledDates); // Send the parsed disabled dates as JSON response
+    } catch (error) {
+        res.status(500).send('Error fetching and parsing calendar data');
+    }
+});
 
 //listening to port 3000
 const server = app.listen(HTTP_PORT, () => {

@@ -1,7 +1,8 @@
 
-       <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
+ 
+       <nav class="autohide navbar navbar-expand-lg fixed-top navbar-light shadow-sm" id="mainNav">
             <div class="container px-5">
-                <a class="navbar-brand fw-bold" href="/"> <img src="/IMAGES/logo.png" alt="" width="260" height="40" class="d-inline-block align-text-top"></a>
+                <a class="navbar-brand fw-bold" href="/"> <img src="/IMAGES/logo.png" alt="" width="300" height="40" class="d-inline-block align-text-top"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="bi-list"></i>
@@ -11,13 +12,16 @@
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#features">Features</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Download</a></li>
                     </ul>
-                    <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal"  onclick="window.location='/contact';">
-                        <span class="d-flex align-items-center">
-                            <i class="bi-chat-text-fill me-2"></i>
-                            <span class="small" >Contact</span>
-                        </span>
-                    </button>
+<button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" onclick="window.location.href = '/#contact';">
+  <span class="d-flex align-items-center">
+    <i class="bi-chat-text-fill me-2"></i>
+    <span class="small">Contact</span>
+  </span>
+</button>
                 </div>
             </div>
+             <script src="/JS/autohide.js"></script>
+             <script src="/JS/navigate.js"></script>
         </nav>
+        
 
