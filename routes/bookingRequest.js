@@ -24,6 +24,7 @@ router.post('/', (req, res) => {
     const { guestDetails, bookingDetails } = req.body;
 
     // Convert subtotal, cleaningFee, deposit, and total to numbers
+    bookingDetails.pricePerNight = parseFloat(bookingDetails.pricePerNight);
     bookingDetails.subtotal = parseFloat(bookingDetails.subtotal);
     bookingDetails.cleaningFee = parseFloat(bookingDetails.cleaningFee);
     bookingDetails.deposit = parseFloat(bookingDetails.deposit);
@@ -32,7 +33,7 @@ router.post('/', (req, res) => {
     const mail = {
         sender: `${guestDetails.firstName} ${guestDetails.lastName} <${guestDetails.email}>`,
         to: process.env.EMAIL,
-        subject: 'New Booking Request',
+        subject: `New Website Booking Request for ${bookingDetails.propertyname}`,
         text: `
             First Name: ${guestDetails.firstName}
             Last Name: ${guestDetails.lastName}
@@ -45,6 +46,7 @@ router.post('/', (req, res) => {
             End Date: ${bookingDetails.endDate}
             Total Nights: ${bookingDetails.totalNights}
             Number of Guests: ${bookingDetails.numGuests}
+            Price per Night: $${bookingDetails.pricePerNight.toFixed(2)}
             Subtotal: $${bookingDetails.subtotal.toFixed(2)}
             Cleaning Fee: $${bookingDetails.cleaningFee.toFixed(2)}
             Deposit: $${bookingDetails.deposit.toFixed(2)}

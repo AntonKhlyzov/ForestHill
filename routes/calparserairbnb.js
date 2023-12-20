@@ -3,9 +3,9 @@ const axios = require('axios');
 
 
 // Implement a function to fetch iCal data (from Airbnb API or file)
-async function fetchICalData() {
+async function fetchAIRBNBICalData(icalUrl) {
     try {
-        const response = await axios.get('https://www.airbnb.ca/calendar/ical/8794140.ics?s=795c7fd37b2b44b0c93aee1d11327435');
+        const response = await axios.get(icalUrl);
         return response.data;
     } catch (error) {
         console.error('Error fetching iCal data:', error);
@@ -13,7 +13,7 @@ async function fetchICalData() {
     }
 }
 
-function parseICalData(data) {
+function parseAIRBNBICalData(data) {
     const lines = data.split('\n');
     const disabledDates = [];
 
@@ -68,6 +68,6 @@ function formatDate(date) {
 }
 
 module.exports = {
-    fetchICalData,
-    parseICalData
+    fetchAIRBNBICalData,
+    parseAIRBNBICalData
 };

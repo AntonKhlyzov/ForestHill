@@ -48,34 +48,63 @@ app.use('/terms',require('./routes/terms'));
 
 app.use('/privacy',require('./routes/privacy'));
 
-// New route for handling booking requests
-const bookingRequestRoute = require('./routes/bookingRequest'); // Create this file
-app.use('/send-booking-request', bookingRequestRoute);
+
+app.use('/send-booking-request', require('./routes/bookingRequest'));//  route for handling booking requests
 
 // app.use('/calendar',require('./routes/calendar'));
 
 // app.use('/fullcalendar', express.static(path.join(__dirname, 'node_modules/fullcalendar/dist')));
 
-const { fetchICalData, parseICalData } = require('./routes/calparserairbnb');
-const { fetchICalData1, parseICalData1 } = require('./routes/calparservrbo');
+const { fetchAIRBNBICalData, parseAIRBNBICalData } = require('./routes/calparserairbnb');
+const { fetchVRBOICalData, parseVRBOICalData } = require('./routes/calparservrbo');
 
-app.get('/airbnb-calendar-parsed', async (req, res) => {
+
+app.get('/moderncoralvilla-calendar-parsed', async (req, res) => {
     try {
-        // Fetch iCal data from Airbnb and VRBO APIs or files and parse them
-        const icalData = await fetchICalData(); // Implement a function to fetch Airbnb iCal data
-        const disabledDates = parseICalData(icalData);
-        
-        const icalData1 = await fetchICalData1(); // Implement a function to fetch VRBO iCal data
-        const disabledDates1 = parseICalData1(icalData1);
+        // Fetch iCal data from Airbnb and parse it
+        const airbnbIcalUrl = 'https://www.airbnb.ca/calendar/ical/8794140.ics?s=795c7fd37b2b44b0c93aee1d11327435';
+        const icalData = await fetchAIRBNBICalData(airbnbIcalUrl);
+        const disabledDates = parseAIRBNBICalData(icalData);
+    
+        // Fetch iCal data from VRBO and parse it
+        const vrboIcalUrl = 'http://www.vrbo.com/icalendar/aeef23a78ea24f91a41ff9e6821c8675.ics?nonTentative';
+        const icalData1 = await fetchVRBOICalData(vrboIcalUrl);
+        const disabledDates1 = parseVRBOICalData(icalData1);
 
         // Combine disabledDates and disabledDates1 into totaldisabledDates
         const totaldisabledDates = [...disabledDates, ...disabledDates1];
 
         res.json(totaldisabledDates); // Send the parsed disabled dates as JSON response
     } catch (error) {
+        console.error('Error fetching and parsing calendar data:', error);
         res.status(500).send('Error fetching and parsing calendar data');
     }
 });
+
+
+const {constructVrboUrl} = require('./routes/constructVrboUrl');
+const {scrapeVrboPrice} = require('./routes/scrapeVrboPrice');
+app.post('/get-vrbo-price-Modern-Coral-Villa', async (req, res) => {
+    try {
+        const startDate = new Date(req.body.startDate);
+        const endDate = new Date(req.body.endDate);
+        const numGuests = req.body.numGuests;
+        const propertyid = req.body.propertyid;
+        console.log('Start date/End date/ num of guests / property id:', startDate, endDate, numGuests, propertyid);
+        // Use the selected dates to construct the VRBO URL
+        const vrboUrl = constructVrboUrl(startDate, endDate, numGuests, propertyid);
+        console.log('VRBO URL:', vrboUrl);
+        // Use a scraping function to get the price from the VRBO page
+        const price = await scrapeVrboPrice(vrboUrl);
+        console.log('VRBO price:', price);
+        // Send the price back to the client
+        res.json({ price: price });
+    } catch (error) {
+        console.error('Error fetching VRBO price:', error.message);
+        res.status(500).send('Error fetching VRBO price');
+    }
+});
+
 
 //listening to port 3000
 const server = app.listen(HTTP_PORT, () => {
