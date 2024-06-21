@@ -360,7 +360,7 @@ $(document).ready(function()
             {
                 // Make an AJAX request to your server with the selected dates
                 $.ajax({
-                    url: '/get-vrbo-price-Modern-Coral-Villa',
+                    url: '/get-vrbo-price',
                     method: 'POST',
                     data: 
                     {
@@ -382,5 +382,9 @@ $(document).ready(function()
                 });
             });
         }    
+
+
+
+
 });
 
