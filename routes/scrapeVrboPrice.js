@@ -5,13 +5,13 @@ puppeteer.use(StealthPlugin());
 async function scrapeVrboPrice(vrboUrl) {
     const browser = await puppeteer.launch({
         headless: 'new',
+        executablePath: process.env.CHROME_EXECUTABLE_PATH || '/opt/render/.cache/puppeteer/chrome-linux/chrome',
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
-      
+    
     const page = await browser.newPage();
 
-   
     try {
-        
         // Navigate to the VRBO page
         await page.goto(vrboUrl);
 
