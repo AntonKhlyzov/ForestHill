@@ -22,7 +22,7 @@ async function scrapeVrboPrice(vrboUrl) {
         const price = await page.$eval('#pdp-search-form span > div', element => element.textContent.trim());
 
         return price;
-        
+
     } catch (error) {
         console.error('Error during VRBO scraping:', error.message);
         return '$250'; // Handle the error gracefully
