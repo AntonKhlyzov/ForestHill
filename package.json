@@ -33,11 +33,15 @@
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "request": "^2.88.2",
     "requirejs": "^2.3.6",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "puppeteer": "^22.11.2"
   },
   "devDependencies": {
     "dotenv-webpack": "^8.0.1",
-    "jest": "^29.7.0",
-    "puppeteer": "^22.11.2"
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
+
