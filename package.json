@@ -5,12 +5,13 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
-    "postinstall": "npx puppeteer install",
-    "prestart": "npx puppeteer install",
-    "start": "node server.js"
+    "start": "npx puppeteer install && node server.js"
   },
   "author": "Anton Khlyzov",
   "license": "ISC",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.8",
     "@fullcalendar/interaction": "^6.1.8",
