@@ -5,8 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
-    "start": "node server.js",
-    "postinstall": "npx puppeteer install"
+    "postinstall": "npx puppeteer install",
+    "prestart": "npx puppeteer install",
+    "start": "node server.js"
   },
   "author": "Anton Khlyzov",
   "license": "ISC",
