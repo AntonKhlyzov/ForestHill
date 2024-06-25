@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer-extra');
+require("dotenv").config();
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
 
