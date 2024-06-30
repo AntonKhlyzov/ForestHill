@@ -1,14 +1,26 @@
 FROM ghcr.io/puppeteer/puppeteer:22.11.2
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=TRUE \
-PUPPETEER_EXECUTABLE_PATH=/user/bin/google-chrome-stable
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 WORKDIR /usr/src/app
 
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
+# Install dependencies
 RUN npm ci
 
+# Install required system dependencies
+RUN apt-get update && apt-get install -y \
+    libgbm1 \
+    libasound2
+
+# Copy the rest of the application code
 COPY . .
 
+# Ensure Puppeteer's Chromium is installed
+RUN node node_modules/puppeteer/install.mjs
+
+# Start the application
 CMD ["node", "server.js"]

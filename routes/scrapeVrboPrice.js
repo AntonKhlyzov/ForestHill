@@ -6,11 +6,9 @@ puppeteer.use(StealthPlugin());
 
 async function scrapeVrboPrice(vrboUrl) {
     const browser = await puppeteer.launch({
-       args: ['--no-sandbox', '--disable-setuid-sandbox', '--single-process', '--no-zygote',],
-       executablePath: 
-        process.env.NODE_ENV === 'production' 
-        ? process.env.PUPPETEER_EXECUTABLE_PATH
-            : puppeteer.executablePath(),
+       args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`,`--disable-setuid-sandbox`, `--single-process`, `--no-zygote`],
+       headless: true,
+       executablePath: `/usr/bin/google-chrome`,
     });
 
     const page = await browser.newPage();
