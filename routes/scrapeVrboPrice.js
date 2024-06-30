@@ -23,8 +23,8 @@ async function scrapeVrboPrice(vrboUrl) {
 
     const page = await browser.newPage();
     try {
-        //await page.goto(vrboUrl);
-       await page.goto(vrboUrl, { waitUntil: 'networkidle2' }); // Wait for network idle
+        await page.goto(vrboUrl);
+       //await page.goto(vrboUrl, { waitUntil: 'networkidle2' }); // Wait for network idle
         await page.waitForSelector('#pdp-search-form span > div', { timeout: 30000 }); // Wait for price selector
         const price = await page.$eval('#pdp-search-form span > div', element => element.textContent.trim());
         return price;
