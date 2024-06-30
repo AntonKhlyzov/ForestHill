@@ -1,6 +1,9 @@
 # Use the official Puppeteer image as the base image
 FROM ghcr.io/puppeteer/puppeteer:22.11.2
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=TRUE \
+PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+
 # Set the working directory
 WORKDIR /usr/src/app
 

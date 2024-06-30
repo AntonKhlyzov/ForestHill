@@ -2,13 +2,16 @@ const puppeteer = require('puppeteer-extra');
 require("dotenv").config();
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
-//console.log(puppeteer.executablePath());
+console.log(puppeteer.executablePath());
 
 async function scrapeVrboPrice(vrboUrl) {
     const browser = await puppeteer.launch({
        args: [`--no-sandbox`, `--headless`, `--disable-gpu`, `--disable-dev-shm-usage`,`--disable-setuid-sandbox`, `--single-process`, `--no-zygote`],
        headless: true,
-       executablePath: `/usr/bin/google-chrome`,
+       executablePath: 
+        process.env.NODE_ENV === 'production' 
+        ? process.env.PUPPETEER_EXECUTABLE_PATH
+            : puppeteer.executablePath(),
     });
 
     const page = await browser.newPage();
