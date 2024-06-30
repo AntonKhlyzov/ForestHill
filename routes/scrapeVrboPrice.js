@@ -14,7 +14,7 @@ async function scrapeVrboPrice(vrboUrl) {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
-            '--enable-gpu',
+            '--disable-gpu',
             '--headless',
             '--single-process',
             '--no-zygote'
