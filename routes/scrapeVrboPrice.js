@@ -6,7 +6,7 @@ puppeteer.use(StealthPlugin());
 
 async function scrapeVrboPrice(vrboUrl) {
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: 'new',
         executablePath: process.env.NODE_ENV === 'production'
             ? process.env.PUPPETEER_EXECUTABLE_PATH
             : puppeteer.executablePath(),
@@ -23,7 +23,8 @@ async function scrapeVrboPrice(vrboUrl) {
 
     const page = await browser.newPage();
     try {
-        await page.goto(vrboUrl, { waitUntil: 'networkidle2' }); // Wait for network idle
+        //await page.goto(vrboUrl);
+       await page.goto(vrboUrl, { waitUntil: 'networkidle2' }); // Wait for network idle
         await page.waitForSelector('#pdp-search-form span > div', { timeout: 30000 }); // Wait for price selector
         const price = await page.$eval('#pdp-search-form span > div', element => element.textContent.trim());
         return price;
