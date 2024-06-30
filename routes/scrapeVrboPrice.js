@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer-extra');
 require("dotenv").config();
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(StealthPlugin());
-console.log(puppeteer.executablePath());
+//console.log(puppeteer.executablePath());
 
 async function scrapeVrboPrice(vrboUrl) {
     const browser = await puppeteer.launch({
