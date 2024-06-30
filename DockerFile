@@ -1,26 +1,31 @@
-# Use the Puppeteer image as a base image
+# Use the official Puppeteer image as the base image
 FROM ghcr.io/puppeteer/puppeteer:22.11.2
 
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy the package.json and package-lock.json files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm ci
 
+# Switch to the root user to install system dependencies
+USER root
+
 # Create the missing directory with appropriate permissions and install required system dependencies
-RUN mkdir -p /var/lib/apt/lists/partial && \
-    chmod 755 /var/lib/apt/lists/partial && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y libgbm1 libasound2
 
-# Copy the rest of the application code
+# Switch back to the non-root user
+USER pptruser
+
+# Copy the remaining application files
 COPY . .
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Define the command to run the app
+# Start the application
 CMD ["npm", "start"]
+
