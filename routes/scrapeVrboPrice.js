@@ -6,7 +6,7 @@ puppeteer.use(StealthPlugin());
 
 async function scrapeVrboPrice(vrboUrl) {
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: 'new',
         executablePath: process.env.NODE_ENV === 'production'
             ? process.env.PUPPETEER_EXECUTABLE_PATH
             : puppeteer.executablePath(),
