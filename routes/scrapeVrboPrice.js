@@ -5,6 +5,7 @@ require('dotenv').config();
 puppeteer.use(StealthPlugin());
 
 async function scrapeVrboPrice(vrboUrl) {
+    console.log('Launching browser...');
     const browser = await puppeteer.launch({
         headless: 'new',
         executablePath: process.env.NODE_ENV === 'production'
@@ -15,6 +16,7 @@ async function scrapeVrboPrice(vrboUrl) {
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-gpu',
+            '--headless',
             '--single-process',
             '--no-zygote'
         ],
@@ -22,43 +24,38 @@ async function scrapeVrboPrice(vrboUrl) {
 
     const page = await browser.newPage();
 
-    // Enable request interception
-    await page.setRequestInterception(true);
+    // Log network requests
+ page.on('request', request => {
+    const url = request.url();
+    if (url.includes('vrbo.com')) {
+        console.log('Request:', url);
+    }
+});
 
-    // Intercept and block unnecessary requests
-    page.on('request', (request) => {
-        const url = request.url();
-        if (url.includes('vrbo.com')) {
-            // Allow requests to VRBO domains
-            console.log('Allowing request:', url);
-            request.continue();
-        } else {
-            // Block other requests
-            console.log('Blocking request:', url);
-            request.abort();
-        }
+    // Log request failures
+    page.on('requestfailed', request => {
+        console.log('Request failed:', request.url(), request.failure().errorText);
     });
 
     try {
-        console.log('Navigating to URL:', vrboUrl);
-        await page.goto(vrboUrl, { waitUntil: 'networkidle2' }); // Wait for network idle
+        console.log('Navigating to:', vrboUrl);
+        await page.goto(vrboUrl, { waitUntil: 'networkidle2', timeout: 60000 }); // Increased timeout
+
         console.log('Waiting for price selector...');
-        
-        // Increase timeout for waiting for the selector
-        await page.waitForSelector('#pdp-search-form span > div', { timeout: 60000 }); // 60 seconds
-        
+        await page.waitForSelector('#pdp-search-form span > div', { timeout: 30000 }); // Wait for price selector
+
         console.log('Extracting price...');
         const price = await page.$eval('#pdp-search-form span > div', element => element.textContent.trim());
         console.log('Price extracted:', price);
+
         return price;
     } catch (error) {
         console.error('Error during VRBO scraping:', error.message);
-        
-        // Take a screenshot and HTML content for debugging
+
+        // Capture screenshot on error
         await page.screenshot({ path: 'error_screenshot.png' });
-        const content = await page.content();
-        console.log('HTML content at error:', content);
-        
+        console.log('Screenshot captured.');
+
         return '$250'; // Handle the error gracefully with a default price
     } finally {
         await browser.close();
