@@ -49,10 +49,11 @@ async function scrapeVrboPrice(vrboUrl) {
         await page.goto(vrboUrl, { waitUntil: 'networkidle2', timeout: 60000 }); // Increased timeout
 
         console.log('Waiting for price selector...');
-        await page.waitForSelector('#quote', { timeout: 30000 }); // Adjusted selector for mobile view
+        const priceSelector = '#pdp-search-form span > div'; // Example selector
+        await page.waitForSelector(priceSelector, { timeout: 30000 }); // Adjusted selector and timeout
 
         console.log('Extracting price...');
-        const price = await page.$eval('#quote', element => element.textContent.trim());
+        const price = await page.$eval(priceSelector, element => element.textContent.trim());
         console.log('Price extracted:', price);
 
         return price;
@@ -71,3 +72,4 @@ async function scrapeVrboPrice(vrboUrl) {
 }
 
 module.exports = { scrapeVrboPrice };
+
