@@ -5,7 +5,6 @@ require('dotenv').config();
 puppeteer.use(StealthPlugin());
 
 async function scrapeVrboPrice(vrboUrl) {
-    console.log('Launching browser...');
     const browser = await puppeteer.launch({
         headless: 'new',
         executablePath: process.env.NODE_ENV === 'production'
@@ -23,40 +22,32 @@ async function scrapeVrboPrice(vrboUrl) {
     });
 
     const page = await browser.newPage();
+    
+    // Enable request interception
+    await page.setRequestInterception(true);
 
-    // Log network requests
-    page.on('request', request => {
-        console.log('Request:', request.url());
-    });
-
-    // Log request failures
-    page.on('requestfailed', request => {
-        console.log('Request failed:', request.url(), request.failure().errorText);
+    // Intercept and block unnecessary requests
+    page.on('request', (request) => {
+        const url = request.url();
+        if (url.includes('vrbo.com') || url.includes('homeaway.com')) {
+            // Allow requests to VRBO or HomeAway domains
+            request.continue();
+        } else {
+            // Block other requests
+            request.abort();
+        }
     });
 
     try {
-        console.log('Navigating to:', vrboUrl);
-        await page.goto(vrboUrl, { waitUntil: 'networkidle2', timeout: 60000 }); // Increased timeout
-
-        console.log('Waiting for price selector...');
+        await page.goto(vrboUrl, { waitUntil: 'networkidle2' }); // Wait for network idle
         await page.waitForSelector('#pdp-search-form span > div', { timeout: 30000 }); // Wait for price selector
-
-        console.log('Extracting price...');
         const price = await page.$eval('#pdp-search-form span > div', element => element.textContent.trim());
-        console.log('Price extracted:', price);
-
         return price;
     } catch (error) {
         console.error('Error during VRBO scraping:', error.message);
-
-        // Capture screenshot on error
-        await page.screenshot({ path: 'error_screenshot.png' });
-        console.log('Screenshot captured.');
-
         return '$250'; // Handle the error gracefully with a default price
     } finally {
         await browser.close();
-        console.log('Browser closed.');
     }
 }
 
