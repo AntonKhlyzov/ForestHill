@@ -24,20 +24,13 @@ async function scrapeVrboPrice(vrboUrl) {
 
     const page = await browser.newPage();
 
-    // Set user agent to a mobile device
-    await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15A5341f Safari/604.1');
-
-    // Enable request interception
-    await page.setRequestInterception(true);
-
     // Log network requests
-    page.on('request', request => {
-        const url = request.url();
-        if (url.includes('vrbo.com')) {
-            console.log('Request:', url);
-        }
-        request.continue();
-    });
+ page.on('request', request => {
+    const url = request.url();
+    if (url.includes('vrbo.com')) {
+        console.log('Request:', url);
+    }
+});
 
     // Log request failures
     page.on('requestfailed', request => {
@@ -49,11 +42,10 @@ async function scrapeVrboPrice(vrboUrl) {
         await page.goto(vrboUrl, { waitUntil: 'networkidle2', timeout: 60000 }); // Increased timeout
 
         console.log('Waiting for price selector...');
-        const priceSelector = '#pdp-search-form span > div'; // Example selector
-        await page.waitForSelector(priceSelector, { timeout: 30000 }); // Adjusted selector and timeout
+        await page.waitForSelector('#pdp-search-form span > div', { timeout: 30000 }); // Wait for price selector
 
         console.log('Extracting price...');
-        const price = await page.$eval(priceSelector, element => element.textContent.trim());
+        const price = await page.$eval('#pdp-search-form span > div', element => element.textContent.trim());
         console.log('Price extracted:', price);
 
         return price;
