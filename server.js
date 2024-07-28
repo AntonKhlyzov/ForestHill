@@ -72,6 +72,15 @@ app.get('/moderncoralvilla-calendar-parsed', async (req, res) => {
         const disabledDates1 = parseVRBOICalData(vrboIcalData);
 
         const totalDisabledDates = [...disabledDates, ...disabledDates1];
+        //const totalDisabledDates = disabledDates1;
+       // console.log('airbnb disabled dates', disabledDates);
+        // Sort the disabled dates array in chronological order
+disabledDates1.sort((a, b) => new Date(a) - new Date(b));
+
+// Log the sorted disabled dates
+//console.log('VRBO disabled dates (sorted):', JSON.stringify(disabledDates1, null, 2));
+
+
 
         res.json(totalDisabledDates); 
     } catch (error) {
